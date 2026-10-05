@@ -1,0 +1,576 @@
+/* One typeface for the whole admin app — Manrope. Hierarchy comes only from weight
+   (300–800), size and letter-spacing. JetBrains Mono is kept solely for <code> /
+   font-mono (genuine monospace: IDs, formulas, JSON) — not part of the type scale. */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+/* Fonts for the public-form design-language templates (formStyles.css). They load
+   lazily — the browser only fetches a face when a template actually renders it. */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Cormorant+Garamond:wght@400;600&family=DM+Serif+Display&family=Outfit:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+/* Registration-form design-language engine (scoped under [data-formstyle]). */
+@import './styles/formStyles.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── Spotlight layout mode (public form, one enlarged question per screen) ──
+   Vertically centres the single question in a taller body and enlarges its
+   label, so each step reads as a focused prompt. Card mode uses the same
+   one-per-screen flow without this styling. Scoped to the form body only. */
+.ke-spotlight {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+.ke-spotlight > form {
+  min-height: 320px;
+  align-content: center;
+}
+.ke-spotlight > form > [class*="col-span"] > label:first-child {
+  font-size: 1.075rem;
+  line-height: 1.5;
+}
+
+/* ── Form-builder "fun" layer — tactile palette, dotted canvas, field spines ──
+   All colour comes from the brand tokens (navy / gold / red); each element sets
+   its category colour inline as `--chip: hsl(var(--token))`, so light + dark both
+   work automatically. `color-mix` degrades gracefully (older engines just skip the
+   tint and fall back to the base card). */
+.ke-palette-item {
+  position: relative;
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--border));
+  background-color: hsl(var(--card));
+  transition: background-color .18s ease, border-color .18s ease, border-radius .18s ease,
+              box-shadow .18s ease, margin-right .18s ease, padding-right .18s ease;
+}
+/* Hover = the navigation's "cut-out tab" opening: the item fills with its category
+   tint, gets a left spine, keeps only its left radius and slides flush to the library
+   card's right edge with concave (inverted-radius) corners — exactly like the active
+   nav item carving out toward the content. Notch colour = the card bg above/below. */
+.ke-palette-item:hover {
+  background-color: color-mix(in srgb, var(--chip) 13%, hsl(var(--card)));
+  border-color: transparent;
+  box-shadow: inset 3px 0 0 var(--chip);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-right: -1rem;
+  padding-right: 1.5rem;
+}
+.ke-palette-item::before,
+.ke-palette-item::after {
+  content: ""; position: absolute; right: 0; width: 12px; height: 12px;
+  pointer-events: none; opacity: 0; transition: opacity .18s ease;
+}
+.ke-palette-item::before { top: -12px;    background: radial-gradient(12px at top left,    transparent 0 11.5px, hsl(var(--background)) 12px); }
+.ke-palette-item::after  { bottom: -12px; background: radial-gradient(12px at bottom left, transparent 0 11.5px, hsl(var(--background)) 12px); }
+.ke-palette-item:hover::before,
+.ke-palette-item:hover::after { opacity: 1; }
+.ke-palette-item:active { background-color: color-mix(in srgb, var(--chip) 20%, hsl(var(--card))); }
+.ke-palette-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.9rem; height: 1.9rem; border-radius: 0.6rem; flex-shrink: 0;
+  color: var(--chip);
+  background: color-mix(in srgb, var(--chip) 15%, transparent);
+  transition: transform .2s cubic-bezier(.2,.8,.2,1), background-color .2s ease;
+}
+.ke-palette-item:hover .ke-palette-chip {
+  transform: rotate(-6deg) scale(1.08);
+  background: color-mix(in srgb, var(--chip) 24%, transparent);
+}
+
+/* Thin, unobtrusive scrollbar for the builder's scroll columns (Field Library,
+   Field Settings, canvas) — replaces the chunky default bars that ate space. */
+.ke-scroll { scrollbar-width: thin; scrollbar-color: hsl(var(--muted-foreground) / 0.32) transparent; }
+.ke-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.ke-scroll::-webkit-scrollbar-track { background: transparent; }
+.ke-scroll::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground) / 0.28);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.ke-scroll::-webkit-scrollbar-thumb:hover { background-color: hsl(var(--muted-foreground) / 0.5); background-clip: padding-box; }
+
+/* Playful dotted "graph paper" backdrop for the builder canvas. */
+.ke-canvas-dots {
+  background-image: radial-gradient(hsl(var(--muted-foreground) / 0.16) 1px, transparent 1px);
+  background-size: 18px 18px;
+  background-position: -9px -9px;
+}
+
+/* A slim category-coloured spine that grows on hover, on each canvas field card. */
+.ke-fieldcard::before {
+  content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px;
+  border-radius: 0 3px 3px 0; background: var(--chip); opacity: .5;
+  transition: opacity .18s ease, top .18s ease, bottom .18s ease;
+}
+.ke-fieldcard:hover::before,
+.ke-fieldcard.is-selected::before { opacity: 1; top: 6px; bottom: 6px; }
+
+/* Tiny generic brand chip (stat strip, type badges). --chip set inline. */
+.ke-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 0.6rem; color: var(--chip);
+  background: color-mix(in srgb, var(--chip) 15%, transparent);
+}
+
+/* ── Field Settings panel — same card look as the Field Library, but the whole
+   container GLOWS (like a palette item's hover glow, held on) to mark the active /
+   "selected" editing state. The glow colour is passed inline as `--glow`, so it can
+   match the selected field's category. Token-driven, so light + dark both adapt. */
+.ke-settings-glow {
+  --glow: hsl(var(--accent));
+  border-color: color-mix(in srgb, var(--glow) 55%, hsl(var(--border))) !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--glow) 40%, transparent),
+    0 0 30px -4px color-mix(in srgb, var(--glow) 45%, transparent),
+    0 20px 46px -22px color-mix(in srgb, var(--glow) 70%, transparent) !important;
+  animation: ke-settings-glow-in .35s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes ke-settings-glow-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Animations (used by the About page & elsewhere) ──────────────────────── */
+
+@keyframes ke-fade-up {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ke-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ke-scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes ke-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-18px); }
+}
+@keyframes ke-float-slow {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(-24px) translateX(10px); }
+}
+@keyframes ke-pulse-ring {
+  0%   { transform: scale(0.95); opacity: 0.6; }
+  70%  { transform: scale(1.25); opacity: 0; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+@keyframes ke-gradient-pan {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes ke-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes ke-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-10px) rotate(3deg); }
+}
+@keyframes ke-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes ke-spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+/* Reveal-on-scroll: hidden until .is-visible is toggled by IntersectionObserver */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animate-float       { animation: ke-float 6s ease-in-out infinite; }
+.animate-float-slow  { animation: ke-float-slow 9s ease-in-out infinite; }
+.animate-bob         { animation: ke-bob 5s ease-in-out infinite; }
+.animate-fade-up     { animation: ke-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-fade-in     { animation: ke-fade-in 1s ease both; }
+.animate-scale-in    { animation: ke-scale-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.animated-gradient {
+  background-size: 200% 200%;
+  animation: ke-gradient-pan 12s ease infinite;
+}
+
+.pulse-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid currentColor;
+  animation: ke-pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #CC9E4A 0%, #fff4d6 50%, #CC9E4A 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: ke-shimmer 4s linear infinite;
+}
+
+.animate-marquee   { animation: ke-marquee 32s linear infinite; }
+.animate-spin-slow { animation: ke-spin-slow 22s linear infinite; }
+
+/* ── Marketing page decorative backgrounds ──────────────────────────────── */
+
+/* Subtle blueprint grid — sits over the dark navy heroes */
+.ke-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, #000 35%, transparent 100%);
+          mask-image: radial-gradient(ellipse 75% 70% at 50% 40%, #000 35%, transparent 100%);
+}
+
+/* Faint dot texture for light sections */
+.ke-dots {
+  background-image: radial-gradient(rgba(10, 29, 72, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Thin gold gradient hairline divider */
+.ke-gold-rule {
+  background: linear-gradient(90deg, transparent, rgba(204, 158, 74, 0.7), transparent);
+}
+
+/* Gradient heading clip — navy → crimson, for light-section h2s.
+   Gently pans back and forth for a subtle living sheen. */
+.ke-heading-gradient {
+  background: linear-gradient(100deg, #0A1D48 0%, #16307a 45%, #9E0E18 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: ke-heading-pan 7s ease-in-out infinite alternate;
+}
+@keyframes ke-heading-pan {
+  0%   { background-position: 0% center; }
+  100% { background-position: 100% center; }
+}
+
+/* Conic ring spotlight behind hero focal elements */
+.ke-conic {
+  background: conic-gradient(from 0deg, rgba(204,158,74,0.0), rgba(204,158,74,0.35), rgba(158,14,24,0.25), rgba(204,158,74,0.0));
+}
+
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .animate-float, .animate-float-slow, .animate-bob,
+  .animate-fade-up, .animate-fade-in, .animate-scale-in,
+  .animated-gradient, .pulse-ring::before, .shimmer-text,
+  .animate-marquee, .animate-spin-slow, .ke-heading-gradient {
+    animation: none;
+  }
+}
+
+html {
+    /* Prevent iOS / Android from auto-resizing text on orientation change. */
+    -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+    /* Make safe-area insets available to anything that wants them. */
+}
+
+body {
+    margin: 0;
+    font-family: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+        Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.006em;
+    /* Forms can occasionally introduce horizontal overflow on small phones; clamp it. */
+    overflow-x: hidden;
+    /* Subtler tap highlight so touch interactions don't flash an ugly grey. */
+    -webkit-tap-highlight-color: rgba(9, 29, 64, 0.12);
+}
+
+/* Defensive belt-and-suspenders: stop iOS Safari from auto-zooming on focus.
+   Inputs with computed font-size ≥ 16px never trigger the zoom. Component-level
+   classes already enforce this, but keep a global safety net for any raw
+   <input> / <textarea> / <select> that may slip through. */
+@media (max-width: 640px) {
+    input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']),
+    textarea,
+    select {
+        font-size: 16px;
+    }
+}
+
+/* Utility: bottom safe-area padding for sticky CTAs on notched iOS devices. */
+.pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+.mb-safe {
+    margin-bottom: env(safe-area-inset-bottom);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+code {
+    font-family: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+@layer base {
+    /* ── Kaizen Events brand tokens ───────────────────────────────────────────
+       Navy #091D40 · Gold #CC9C4C · Red #AC1E20 · White #FFFFFF · Off-white #F7F7F5
+       LIGHT: white bg · navy ink · gold highlights · red attention.
+       Semantic mapping preserved from the existing app: primary=navy,
+       accent=gold, secondary/destructive=red. All values are HSL triples so
+       shadcn components and charts re-skin from this one place. */
+    :root {
+        --background: 220 16% 95%;   /* grey page field — white cards + navy hero pop against it */
+        --foreground: 220 60% 12%;
+        --card: 0 0% 100%;
+        --card-foreground: 220 60% 12%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 220 60% 12%;
+        --primary: 218 75% 14%;
+        --primary-foreground: 0 0% 100%;
+        /* Basic-fields category hue — a true blue in BOTH themes (--primary is dark
+           navy in light mode, which reads as grey, so category colouring uses this). */
+        --cat-basic: 214 66% 52%;
+        --primary-hover: 220 78% 10%;
+        --primary-subtle: 222 44% 94%;
+        --secondary: 359 70% 40%;
+        --secondary-foreground: 0 0% 100%;
+        --muted: 220 16% 93%;
+        --muted-foreground: 220 16% 40%;
+        --accent: 38 56% 55%;
+        --accent-foreground: 218 75% 14%;
+        --accent-subtle: 42 78% 92%;
+        --destructive: 359 70% 40%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 220 22% 88%;
+        --input: 220 22% 88%;
+        --ring: 38 56% 50%;
+        --chart-1: 218 72% 26%;
+        --chart-2: 38 56% 52%;
+        --chart-3: 359 68% 46%;
+        --chart-4: 205 46% 44%;
+        --chart-5: 40 46% 70%;
+        --radius: 0.375rem;
+    }
+    /* DARK: deep-navy bg · off-white ink · gold highlights · red attention.
+       primary lifts to a visible royal-navy so navy CTAs read on the navy field;
+       accent/gold and red brighten slightly for contrast. */
+    .dark {
+        --background: 220 55% 8%;
+        --foreground: 60 11% 96%;
+        --card: 220 48% 11%;
+        --card-foreground: 60 11% 96%;
+        --popover: 220 48% 11%;
+        --popover-foreground: 60 11% 96%;
+        --primary: 214 66% 52%;
+        --primary-foreground: 0 0% 100%;
+        --primary-hover: 214 66% 44%;
+        --primary-subtle: 220 40% 18%;
+        --secondary: 359 66% 50%;
+        --secondary-foreground: 0 0% 100%;
+        --muted: 220 34% 16%;
+        --muted-foreground: 220 16% 66%;
+        --accent: 38 60% 58%;
+        --accent-foreground: 220 55% 8%;
+        --accent-subtle: 38 30% 22%;
+        --destructive: 359 66% 52%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 220 30% 20%;
+        --input: 220 30% 20%;
+        --ring: 38 60% 56%;
+        --chart-1: 214 66% 60%;
+        --chart-2: 38 60% 60%;
+        --chart-3: 359 66% 60%;
+        --chart-4: 196 46% 56%;
+        --chart-5: 40 48% 75%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PREMIUM ADMIN DESIGN LANGUAGE  (redesign v2)
+   Reusable, token-driven surfaces for the admin dashboard. Navy structure,
+   gold accents, refined elevation + restrained glass. GPU-friendly (transform/
+   opacity/box-shadow only); backdrop-filter is confined to sticky bars.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Atmospheric page field: calm navy/gold light-sources fixed behind content. */
+.ke-atmos { position: relative; background-color: hsl(var(--background)); }
+.ke-atmos::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(55rem 55rem at 100% -12%, hsl(var(--primary) / 0.06), transparent 60%),
+    radial-gradient(45rem 45rem at -8% 2%, hsl(var(--accent) / 0.05), transparent 55%);
+}
+.dark .ke-atmos::before {
+  background:
+    radial-gradient(65rem 65rem at 100% -15%, hsl(var(--primary) / 0.22), transparent 60%),
+    radial-gradient(50rem 50rem at -8% 0%, hsl(var(--accent) / 0.07), transparent 55%);
+}
+.ke-atmos > * { position: relative; z-index: 1; }
+
+/* Premium elevated surface (replaces flat bordered cards). */
+.ke-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px hsl(var(--primary) / 0.04), 0 10px 26px -14px hsl(var(--primary) / 0.12);
+}
+.dark .ke-card { box-shadow: 0 1px 2px rgba(0,0,0,.45), 0 14px 32px -16px rgba(0,0,0,.65); }
+
+.ke-card-hover { transition: transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s ease, border-color .18s ease; }
+.ke-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: hsl(var(--accent) / 0.45);
+  box-shadow: 0 2px 4px hsl(var(--primary) / 0.06), 0 20px 44px -18px hsl(var(--primary) / 0.20);
+}
+.dark .ke-card-hover:hover { box-shadow: 0 2px 4px rgba(0,0,0,.5), 0 24px 50px -20px rgba(0,0,0,.75); }
+
+/* Glass toolbar — sticky bars only. */
+.ke-glass {
+  background: hsl(var(--card) / 0.72);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+          backdrop-filter: saturate(1.4) blur(10px);
+  border: 1px solid hsl(var(--border) / 0.8);
+}
+
+/* Navy hero band for page headers. */
+.ke-hero {
+  position: relative; overflow: hidden; border-radius: 0.625rem;
+  background: linear-gradient(120deg, hsl(218 78% 12%) 0%, hsl(220 55% 22%) 55%, hsl(218 72% 15%) 100%);
+  color: #fff;
+}
+.ke-hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(26rem 16rem at 92% -30%, hsl(var(--accent) / 0.40), transparent 60%),
+    linear-gradient(rgba(255,255,255,0.02), hsl(220 60% 6% / 0.22));
+}
+.ke-hero-grid {
+  position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image:
+    linear-gradient(hsl(0 0% 100% / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(0 0% 100% / 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 100% at 50% 0%, #000 30%, transparent 75%);
+          mask-image: radial-gradient(ellipse 80% 100% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* Gold hairline under section titles. */
+.ke-rule-gold { height: 2px; width: 2.25rem; border-radius: 2px; background: linear-gradient(90deg, hsl(var(--accent)), hsl(var(--accent) / 0)); }
+
+/* Gradient icon medallion. */
+.ke-medallion {
+  width: 2.75rem; height: 2.75rem; border-radius: 0.5rem;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 0 0 1px hsl(var(--border) / 0.55);
+}
+
+/* Section title convenience. */
+.ke-section-title { font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif; font-weight: 700; letter-spacing: -0.01em; color: hsl(var(--foreground)); }
+
+/* Active nav "cut-out" tab (marked flight-dashboard style): the selected item is a
+   cream tab flush to the sidebar's right edge, with concave (inverted-radius) corners
+   above and below, so it reads as carved out of the panel / connected to the content. */
+.ke-nav-active {
+  position: relative;
+  background: hsl(var(--background));   /* matches the page field so the tab reads as carved into the content */
+  color: hsl(var(--foreground));
+  border-radius: 8px 0 0 8px;
+  margin-right: -0.75rem;               /* extend to the sidebar's right edge (cancels the nav's px-3) */
+}
+.ke-nav-active::before,
+.ke-nav-active::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+.ke-nav-active::before { top: -16px;    background: radial-gradient(16px at top left,    transparent 0 15.5px, hsl(var(--background)) 16px); }
+.ke-nav-active::after  { bottom: -16px; background: radial-gradient(16px at bottom left, transparent 0 15.5px, hsl(var(--background)) 16px); }
+
+/* Active nav icon chip: navy in light, white in dark (per request). */
+.ke-nav-active-chip { background: hsl(var(--primary)); }
+.dark .ke-nav-active-chip { background: #ffffff; }
+
+/* Primary highlight fill (progress/share bars etc.): primary in light, white in dark. */
+.ke-hl { background-color: hsl(var(--primary)); }
+.dark .ke-hl { background-color: #ffffff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ke-card-hover { transition: none; }
+  .ke-card-hover:hover { transform: none; }
+}
+
+@layer base {
+    [data-debug-wrapper="true"] {
+        display: contents !important;
+    }
+
+    [data-debug-wrapper="true"] > * {
+        margin-left: inherit;
+        margin-right: inherit;
+        margin-top: inherit;
+        margin-bottom: inherit;
+        padding-left: inherit;
+        padding-right: inherit;
+        padding-top: inherit;
+        padding-bottom: inherit;
+        column-gap: inherit;
+        row-gap: inherit;
+        gap: inherit;
+        border-left-width: inherit;
+        border-right-width: inherit;
+        border-top-width: inherit;
+        border-bottom-width: inherit;
+        border-left-style: inherit;
+        border-right-style: inherit;
+        border-top-style: inherit;
+        border-bottom-style: inherit;
+        border-left-color: inherit;
+        border-right-color: inherit;
+        border-top-color: inherit;
+        border-bottom-color: inherit;
+    }
+}

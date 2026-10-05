@@ -1,0 +1,10 @@
+# Allow kaizenevents.php to be reached via /kaizenevents (without the .php extension)
+# Optional — only matters if the host runs Apache. Cashfree dashboard URL can
+# either be /kaizenevents or /kaizenevents.php — both work after this rule.
+RewriteEngine On
+RewriteRule ^kaizenevents/?$ kaizenevents.php [L]
+
+# Block direct access to log file
+<Files "kaizenevents.log">
+    Require all denied
+</Files>

@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaizenEvents.API", "KaizenEvents.API\KaizenEvents.API.csproj", "{9901B1C3-4A6D-4145-93A2-3848B37027B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaizenEvents.Core", "KaizenEvents.Core\KaizenEvents.Core.csproj", "{C57C4AED-4990-42F3-8830-9ECA64E3E49C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaizenEvents.Infrastructure", "KaizenEvents.Infrastructure\KaizenEvents.Infrastructure.csproj", "{9007CC17-207C-43D4-98FD-9FC44BB87FED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaizenEvents.Shared", "KaizenEvents.Shared\KaizenEvents.Shared.csproj", "{35EE2A3D-AAE8-4FF3-B7E5-AE0D08BFEDCA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9901B1C3-4A6D-4145-93A2-3848B37027B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9901B1C3-4A6D-4145-93A2-3848B37027B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9901B1C3-4A6D-4145-93A2-3848B37027B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9901B1C3-4A6D-4145-93A2-3848B37027B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C57C4AED-4990-42F3-8830-9ECA64E3E49C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C57C4AED-4990-42F3-8830-9ECA64E3E49C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C57C4AED-4990-42F3-8830-9ECA64E3E49C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C57C4AED-4990-42F3-8830-9ECA64E3E49C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9007CC17-207C-43D4-98FD-9FC44BB87FED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9007CC17-207C-43D4-98FD-9FC44BB87FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9007CC17-207C-43D4-98FD-9FC44BB87FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9007CC17-207C-43D4-98FD-9FC44BB87FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35EE2A3D-AAE8-4FF3-B7E5-AE0D08BFEDCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35EE2A3D-AAE8-4FF3-B7E5-AE0D08BFEDCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35EE2A3D-AAE8-4FF3-B7E5-AE0D08BFEDCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35EE2A3D-AAE8-4FF3-B7E5-AE0D08BFEDCA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

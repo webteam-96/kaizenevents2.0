@@ -1,0 +1,29 @@
+/* Window-scroll mode: the PAGE's single scrollbar drives the stack — there is
+   no separate/nested scroll region. The scroller div is just a passthrough. */
+
+.scroll-stack-scroller {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-stack-inner {
+  /* small top gap + generous bottom room so the last card pins/releases cleanly */
+  padding: 2vh 0 30rem;
+}
+
+.scroll-stack-card {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  transform-origin: top center;
+  will-change: transform, filter;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.scroll-stack-end {
+  width: 100%;
+  height: 1px;
+}

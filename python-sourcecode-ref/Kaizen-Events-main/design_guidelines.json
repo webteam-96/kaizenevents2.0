@@ -1,0 +1,150 @@
+{
+  "identity": {
+    "name": "Kaizen Admin",
+    "persona": "E1 - The Anti-AI Designer",
+    "vibe": "Vibrant, Modern, Efficient, Data-First",
+    "archetype": "Swiss & High-Contrast with Electric Accents"
+  },
+  "typography": {
+    "headings": {
+      "family": "Outfit, sans-serif",
+      "weights": ["500", "600", "700"],
+      "usage": "All page titles, card headers, and modal titles. Use tight tracking (-0.02em)."
+    },
+    "body": {
+      "family": "Plus Jakarta Sans, sans-serif",
+      "weights": ["400", "500", "600"],
+      "usage": "General text, form labels, table data. Excellent legibility at small sizes."
+    },
+    "mono": {
+      "family": "JetBrains Mono, monospace",
+      "usage": "IDs, code snippets, technical data."
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "DEFAULT": "#7c3aed",
+        "foreground": "#ffffff",
+        "hover": "#6d28d9",
+        "active": "#5b21b6",
+        "subtle": "#f5f3ff"
+      },
+      "secondary": {
+        "DEFAULT": "#14b8a6",
+        "foreground": "#ffffff",
+        "hover": "#0d9488",
+        "subtle": "#f0fdfa"
+      },
+      "accent": {
+        "DEFAULT": "#f43f5e",
+        "foreground": "#ffffff",
+        "subtle": "#fff1f2"
+      },
+      "background": {
+        "DEFAULT": "#f8fafc",
+        "paper": "#ffffff",
+        "subtle": "#f1f5f9"
+      },
+      "text": {
+        "primary": "#0f172a",
+        "secondary": "#64748b",
+        "muted": "#94a3b8"
+      },
+      "border": {
+        "DEFAULT": "#e2e8f0",
+        "subtle": "#f1f5f9",
+        "focus": "#7c3aed"
+      }
+    },
+    "gradients": {
+      "primary": "linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)",
+      "subtle": "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(124,58,237,0.05) 100%)"
+    }
+  },
+  "visual_enhancers": {
+    "shadows": {
+      "card": "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+      "float": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      "glow": "0 0 15px rgba(124, 58, 237, 0.3)"
+    },
+    "borders": {
+      "radius": {
+        "sm": "0.5rem",
+        "md": "0.75rem",
+        "lg": "1rem",
+        "full": "9999px"
+      },
+      "width": "1px",
+      "style": "solid"
+    },
+    "glassmorphism": {
+      "backdrop-filter": "blur(12px)",
+      "background": "rgba(255, 255, 255, 0.8)",
+      "border": "1px solid rgba(255, 255, 255, 0.3)"
+    }
+  },
+  "layout_strategies": {
+    "dashboard_grid": {
+      "description": "Control Room Grid - Dense but breathable",
+      "classes": "grid grid-cols-1 md:grid-cols-12 gap-6 p-6",
+      "items": {
+        "summary_card": "col-span-12 md:col-span-6 lg:col-span-3",
+        "main_chart": "col-span-12 lg:col-span-8 row-span-2",
+        "side_list": "col-span-12 lg:col-span-4 row-span-2"
+      }
+    },
+    "form_builder": {
+      "description": "Canvas Layout - Center stage with sidebars",
+      "structure": "flex h-screen overflow-hidden",
+      "sidebar_left": "w-64 border-r bg-white p-4 overflow-y-auto",
+      "canvas": "flex-1 bg-slate-50 p-8 overflow-y-auto relative bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]",
+      "sidebar_right": "w-80 border-l bg-white p-4 overflow-y-auto"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all duration-200 active:scale-95 rounded-lg px-6 py-2.5 font-medium",
+      "secondary": "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 active:scale-95 rounded-lg px-6 py-2.5 font-medium",
+      "ghost": "hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors rounded-lg px-4 py-2"
+    },
+    "cards": {
+      "base": "bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-200 p-6",
+      "interactive": "cursor-pointer hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+    },
+    "inputs": {
+      "base": "flex h-10 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200"
+    }
+  },
+  "image_urls": {
+    "placeholders": {
+      "event_cover": "https://images.unsplash.com/photo-1550305080-4e029753abcf?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "conference_hall": "https://images.unsplash.com/photo-1543283864-0eba98564bd4?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "abstract_bg_1": "https://images.unsplash.com/photo-1764346914541-f299c3d35490?crop=entropy&cs=srgb&fm=jpg&q=85",
+      "abstract_bg_2": "https://images.unsplash.com/photo-1759852174174-7beac185d35f?crop=entropy&cs=srgb&fm=jpg&q=85"
+    },
+    "avatars": [
+      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100",
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100"
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Use 'Outfit' font for all headings and 'Plus Jakarta Sans' for body text. Import them via Google Fonts in index.css.",
+    "Implement the 'Control Room' grid for the main dashboard.",
+    "Use the 'Canvas Layout' for the Form Builder page.",
+    "Apply the 'Vibrant' color palette. Use Violet-600 as the primary brand color.",
+    "Ensure all interactive elements have hover states and transitions (duration-200).",
+    "Use 'sonner' for all toast notifications.",
+    "For the Form Builder, use a dot-grid background to emphasize the 'builder' context.",
+    "Ensure all inputs and buttons have 'rounded-lg' (not default md) for a modern feel.",
+    "Add 'data-testid' to all interactive elements."
+  ],
+  "universal_guidelines": [
+    "Do not use generic centered layouts.",
+    "Create depth through layered design elements.",
+    "Use glass-morphism effects where appropriate (e.g., sticky headers).",
+    "Never use 'transition: all'. Animate specific properties.",
+    "Always use modern button styles (pill or rounded-lg).",
+    "Every interaction needs micro-animations."
+  ]
+}

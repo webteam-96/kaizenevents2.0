@@ -1,0 +1,112 @@
+/* Styling for the rich-text answer field (TipTap input) and its read-only view.
+ * Tailwind's `prose` isn't available (@tailwindcss/typography not installed), so
+ * these rules give lists/headings/quotes/links real visual differentiation. */
+
+.rte-input .ProseMirror {
+  min-height: 120px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  outline: none;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1e293b; /* slate-800 */
+}
+
+.rte-input .ProseMirror p,
+.rte-view p { margin: 0 0 8px 0; }
+.rte-input .ProseMirror p:last-child,
+.rte-view p:last-child { margin-bottom: 0; }
+
+.rte-input .ProseMirror h1, .rte-view h1 { font-size: 22px; font-weight: 700; margin: 12px 0 8px; }
+.rte-input .ProseMirror h2, .rte-view h2 { font-size: 18px; font-weight: 700; margin: 10px 0 6px; }
+.rte-input .ProseMirror h3, .rte-view h3 { font-size: 16px; font-weight: 600; margin: 8px 0 4px; }
+
+.rte-input .ProseMirror strong, .rte-view strong { font-weight: 700; }
+.rte-input .ProseMirror em, .rte-view em { font-style: italic; }
+.rte-input .ProseMirror s, .rte-view s { text-decoration: line-through; }
+.rte-input .ProseMirror u, .rte-view u { text-decoration: underline; }
+
+.rte-input .ProseMirror a, .rte-view a {
+  color: #7c3aed; /* primary */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.rte-input .ProseMirror mark, .rte-view mark {
+  background-color: #fde68a;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.rte-input .ProseMirror ul, .rte-view ul { list-style-type: disc; padding-left: 22px; margin: 6px 0 8px; }
+.rte-input .ProseMirror ol, .rte-view ol { list-style-type: decimal; padding-left: 22px; margin: 6px 0 8px; }
+.rte-input .ProseMirror li, .rte-view li { margin: 3px 0; }
+.rte-input .ProseMirror li > p, .rte-view li > p { margin: 0; }
+
+.rte-input .ProseMirror blockquote, .rte-view blockquote {
+  border-left: 4px solid #cbd5e1; /* slate-300 */
+  margin: 8px 0;
+  padding: 2px 12px;
+  color: #475569; /* slate-600 */
+  font-style: italic;
+}
+
+/* Placeholder when the editor is empty */
+.rte-input .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #94a3b8; /* slate-400 */
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+/* Sub / superscript */
+.rte-input .ProseMirror sub, .rte-view sub { vertical-align: sub; font-size: 0.8em; }
+.rte-input .ProseMirror sup, .rte-view sup { vertical-align: super; font-size: 0.8em; }
+
+/* Horizontal rule */
+.rte-input .ProseMirror hr, .rte-view hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 12px 0;
+}
+
+/* Tables */
+.rte-input .ProseMirror table, .rte-view table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+  table-layout: fixed;
+}
+.rte-input .ProseMirror td, .rte-input .ProseMirror th,
+.rte-view td, .rte-view th {
+  border: 1px solid #cbd5e1; /* slate-300 */
+  padding: 6px 8px;
+  vertical-align: top;
+  min-width: 40px;
+  position: relative;
+}
+.rte-input .ProseMirror th, .rte-view th {
+  background: #f1f5f9; /* slate-100 */
+  font-weight: 600;
+  text-align: left;
+}
+/* Highlight the active cell while editing a table */
+.rte-input .ProseMirror .selectedCell:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(124, 58, 237, 0.08); /* primary tint */
+  pointer-events: none;
+}
+
+/* Read-only view (admin screens) */
+.rte-view {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1e293b;
+  word-break: break-word;
+}

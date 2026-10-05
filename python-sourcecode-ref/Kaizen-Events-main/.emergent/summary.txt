@@ -1,0 +1,170 @@
+<analysis>**original_problem_statement:**
+The user's initial goal was to address a range of bugs and add new features to their Form Builder application. This included fixing rendering issues for Name and Checkbox fields, overhauling the Formula Builder and Field Rules UI/UX, correcting the total amount calculation to be strictly formula-based, and fixing the offline payment OTP flow.
+
+Throughout the session, the user introduced several new requests:
+-   Improving the Formula Builder to show human-readable field names as deletable chips.
+-   Fixing a bug where the calculated total was always zero.
+-   Adding live search/autocomplete functionality to the Kiosk Mode for finding registrants.
+-   Changing registration status labels from completed to a more user-friendly Paid.
+-   Refactoring duplicated code between the two public form pages.
+-   Fixing a bug where registrant names appeared as Guest across the application.
+-   Personalizing the OTP success screen with the registrant's name.
+-   Adding an OTP verification step for volunteers in Kiosk Mode to confirm offline payments.
+-   Fixing the newly implemented OTP verification flow, which was failing even with the correct OTP.
+
+**User's preferred language**: English
+
+**what currently exists?**
+The application is a form builder with a React frontend, FastAPI backend, and MongoDB database. All major bugs from the previous session have been resolved.
+
+In this session, the agent successfully overhauled the Formula Builder UI to use a token/chip-based input system, fixed the formula calculation and saving logic, and implemented a live-search feature in Kiosk Mode. Code quality was improved by refactoring duplicated logic from  and  into a shared  hook. Several bugs related to data display were fixed, ensuring registrant names and payment statuses appear correctly across the dashboard, registration lists, and Kiosk Mode. A complete OTP verification flow was added to Kiosk Mode, allowing volunteers to confirm offline payments. A recurring MongoDB IP whitelist issue was also diagnosed and resolved.
+
+**Last working item**:
+-   **Last item agent was working:** The agent was fixing the OTP verification flow in Kiosk Mode after the user reported it was failing.
+    -   **Issue:** The user reported that entering both correct and incorrect OTPs resulted in a Not Found error. The instructional text also needed to be updated to remove SMS.
+    -   **Agent's Findings:** The root cause was that most test registrations in the database were created before the offline payment flow was finalized and therefore lacked an  value, causing the verification to fail.
+-   **Status:** IN PROGRESS
+-   **Agent Testing Done:** N
+-   **Which testing method agent to use?** Frontend testing agent. The agent should test the complete Kiosk Mode OTP flow:
+    1.  Log in as a kiosk volunteer.
+    2.  Search for a registrant created via the offline payment flow (who has an OTP).
+    3.  Enter an incorrect OTP and verify a user-friendly error message is displayed.
+    4.  Enter the correct OTP and verify the flow proceeds to payment confirmation.
+    5.  Search for an older registrant (who does not have an OTP) and verify the OTP verification step is correctly skipped.
+-   **User Testing Done:** N
+
+**All Pending/In progress Issue list**:
+-   **Issue 1: Kiosk Mode OTP verification is not fully functional (P0)**
+    -   **Description:** The user-facing OTP verification in Kiosk mode fails. The error message for an incorrect OTP is not specific, and the verification fails even with a correct OTP due to issues with legacy data.
+    -   **Attempted fixes:** The agent identified that test registrations lacked an . The frontend  was modified to conditionally skip the OTP step for registrations without an OTP. The backend search was updated to always return an OTP if present. The instructional text was corrected.
+    -   **Next debug checklist:**
+        -   In , review and improve the error handling in the  function to provide specific feedback to the user (e.g., Incorrect OTP. Please try again.). The current implementation has a generic failure message.
+        -   Verify that the logic to *skip* OTP verification for registrations without an OTP works correctly.
+        -   To test properly, **create a new registrant via an offline payment form** to ensure a valid  is generated and saved in the database.
+        -   Use this new registration to test both incorrect and correct OTP submissions in Kiosk Mode.
+    -   **Why fix this issue and what will be achieved with the fix?** This is the critical final step for volunteers to process on-site cash payments. Fixing it will make the kiosk mode fully functional for offline events.
+    -   **Status:** IN PROGRESS
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** Both
+    -   **Blocked on other issue:** None
+
+**In progress Task List**:
+-   None.
+
+**Upcoming and Future Tasks**
+
+**Upcoming Tasks:**
+-   **P0: Test Formula Execution Accuracy:** The UI for the formula builder is complete, but the accuracy of complex formulas (e.g., using  conditions with field values) needs to be tested end-to-end on the public-facing forms.
+-   **P1: End-to-End Field Rules Testing:** The UI and basic functionality for field rules are in place. A comprehensive test of all action types (Show, Hide, Require, Set Value, etc.) is needed to ensure they behave as expected on the live forms.
+
+**Future Tasks:**
+-   **P1: Implement Kiosk Mode QR Code Scanner:** Add a feature to scan a QR code for quick registrant check-in.
+-   **P2: Live Payment Gateway Testing (Razorpay):** **BLOCKED** pending user-provided live API credentials.
+-   **P3: Enable Email Notifications (Brevo):** **BLOCKED** pending the user whitelisting the server's current IP address ().
+
+**Completed work in this session**
+-   **Formula Builder UI/UX Overhaul:**
+    -   Rewrote  to use a token/chip-based input for a more intuitive user experience.
+-   **Formula Calculation & Saving Fixed:**
+    -   Corrected logic to ensure formulas are read from the correct field () and that saving from the formula builder persists to the database.
+-   **Kiosk Mode Live Search:**
+    -   Implemented a debounced, live search in  for instant registrant lookup.
+-   **Registrant Name Display Fix:**
+    -   Resolved the Guest bug by adding a helper function () to correctly parse names from form data in , , and .
+-   **Code Refactoring:**
+    -   Created  to remove duplicated code from  and .
+-   **UI Label Improvements:**
+    -   Updated registration status labels to Paid/Pending.
+    -   Personalized the OTP success screen with the registrant's name.
+-   **Kiosk Mode OTP Verification Flow:**
+    -   Added the complete UI and backend logic for volunteers to verify a registrant's OTP before confirming a cash payment.
+-   **Database Connectivity Resolved (Recurring):**
+    -   Diagnosed and resolved another  by having the user whitelist the new container IP ().
+
+**Earlier issues found/mentioned but not fixed**
+-   None.
+
+**Known issue recurrence from previous fork**
+-   **Issue recurrence in previous fork:** MongoDB Atlas connection instability () due to dynamic container IPs.
+-   **Recurrence count:** 2
+-   **Status:** RESOLVED. The user has been advised to whitelist  in their Atlas settings for the dev environment to prevent this from happening again.
+
+**Code Architecture**
+
+
+**Key Technical Concepts**
+-   **React Custom Hooks:** Created  to abstract complex state logic and promote code reuse (DRY principle).
+-   **Debouncing:** Used  and  in  to implement an efficient live search that avoids excessive API calls.
+-   **Token-based UI:** Architected  to manage formula elements as an array of tokens or chips, providing a modern and intuitive editing experience.
+-   **Network Troubleshooting:** Successfully diagnosed and resolved a recurring MongoDB IP whitelisting issue by identifying the new container IP address.
+
+**key DB schema**
+-   No schema changes were made.
+
+**changes in tech stack**
+-   None.
+
+**All files of reference**
+-   **/app/frontend/src/pages/KioskMode.js**: The primary file for the current issue. Contains the live search and OTP verification logic.
+-   **/app/backend/kiosk_routes.py**: Contains the backend search logic for kiosk mode.
+-   **/app/backend/offline_payment_routes.py**: Contains the OTP verification and resend endpoints.
+-   **/app/frontend/src/components/FormBuilder/FormulaBuilder.js**: The component for the token-based formula editor.
+-   **/app/frontend/src/hooks/usePublicForm.js**: The shared hook containing logic for public-facing forms.
+
+**Areas that need refactoring**:
+-   The  function, which contains complex presentational logic, is still duplicated across  and . This could be extracted into a shared component to further improve maintainability.
+
+**key api endpoints**
+-   : Used for live searching registrants in Kiosk Mode.
+-   : **NEW**. Used by the kiosk to verify a registrant's OTP.
+-   : Used by the kiosk to trigger resending an OTP.
+-   : Used to save the form configuration, including the .
+
+**Critical Info for New Agent**
+-   **Recurring MongoDB IP Issue:** The container's outbound IP is dynamic ( currently). If the app fails to load data, the first step is to check for a  in the backend logs and have the user whitelist the new IP. The permanent fix is for the user to whitelist  in their dev environment.
+-   **Testing the Kiosk OTP Flow:** To properly test the current issue, you **must create a new registrant** through a public form with offline payment enabled. This ensures the registration record has the necessary  field. Use this new record to test the success path, and use an older record (without an OTP) to test the fallback path where the OTP step is skipped.
+-   **Code Duplication in Public Forms:** The  hook handles shared logic, but the large  function is still duplicated in  and . UI bugs on the public form may need to be fixed in both places.
+
+**documents and test reports created in this job**
+-   
+-   
+
+**Last 10 User Messages and any pending HUMAN messages**
+1.  **Bug Report:** Guest name appears for registrants. **Status:** COMPLETED.
+2.  **Request:** Personalize the OTP success screen with the registrant's name. **Status:** COMPLETED.
+3.  **Bug Report:** Guest name also appears in Kiosk Mode search results. **Status:** COMPLETED.
+4.  **Request:** Add OTP entry field and Resend OTP button to Kiosk Mode for payment verification. **Status:** COMPLETED (initial implementation).
+5.  **Bug Report:** OTP instructional text says email/SMS. **Status:** COMPLETED.
+6.  **Bug Report:** Incorrect OTP shows a poor error message. **Status:** IN PROGRESS.
+7.  **Bug Report:** Correct OTP fails verification with a Not Found error. **Status:** IN PROGRESS. This is the main part of the current task.
+
+**Project Health Check:**
+-   **Broken:**
+    -   The Kiosk Mode OTP verification flow is not fully functional and requires fixes to error handling and logic for legacy data.
+-   **Mocked:**
+    -   Razorpay Payment Gateway (Settlement APIs).
+    -   Brevo Email Integration (pending IP whitelisting).
+
+**3rd Party Integrations**
+-   **@dnd-kit:** Used for drag-and-drop in the Form Builder.
+-   **MongoDB Atlas:** Primary database. Connection is stable but requires IP whitelisting on IP change.
+-   **Instamojo (Payments):** Functional.
+-   **Razorpay (Payments):** Implemented, but settlement APIs are mocked.
+-   **Brevo/Sendinblue (Email):** Configured but **BLOCKED**. The user needs to whitelist IP .
+-   **Google Sheets API & Google Drive API:** Functional.
+-   **Interakt (WhatsApp):** Functional.
+
+**Testing status**
+-   **Testing agent used after significant changes:** YES
+-   **Troubleshoot agent used after agent stuck in loop:** NO
+-   **Test files created:** None.
+-   **Known regressions:** None.
+
+**Credentials to test flow:**
+-   **Super Admin/Director Email:** 
+-   **Super Admin/Director Password:** 
+-   **Kiosk Volunteer Email:** 
+-   **Kiosk Volunteer Password:** 
+
+**What agent forgot to execute**
+-   The agent did not implement a specific user-friendly error message for an incorrect OTP in . The current  function has a generic . This was part of the user's last request and should be addressed.</analysis>

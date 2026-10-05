@@ -1,0 +1,275 @@
+/* ============================================================================
+   Public registration-form DESIGN-LANGUAGE ENGINE
+   ----------------------------------------------------------------------------
+   Each template carries theme.style (a design language) + theme.layout (a page
+   structure). The renderer sets `data-formstyle` / `data-formlayout` on the form
+   root (.ke-form-root) plus a --fs-* CSS-variable block from the theme palette.
+   Everything here is scoped under [data-formstyle], so a form with NO style
+   (custom themes / today's saved configs) is completely unaffected.
+
+   Class hooks added on the renderers: .ke-form-root .ke-form-card
+   .ke-form-header .ke-form-aside .ke-form-submit
+   Palette vars set inline from the theme: --fs-primary --fs-accent --fs-text
+   --fs-surface --fs-page --fs-font
+   ============================================================================ */
+
+/* ---- Base: derive helpers + neutralise the form's hardcoded slate palette --- */
+[data-formstyle]{
+  --fs-line: color-mix(in srgb, var(--fs-text, #1e293b) 16%, transparent);
+  --fs-muted: color-mix(in srgb, var(--fs-text, #1e293b) 55%, transparent);
+  --fs-input-bg: color-mix(in srgb, var(--fs-text, #1e293b) 5%, var(--fs-surface, #ffffff));
+  --fs-radius: 12px;
+  font-family: var(--fs-font, inherit);
+}
+
+/* the card + its text/background take the theme so dark templates render dark */
+[data-formstyle] .ke-form-card{
+  background: var(--fs-surface, #fff) !important;
+  color: var(--fs-text, #0f172a);
+  border-radius: var(--fs-radius);
+  border-color: var(--fs-line) !important;
+}
+[data-formstyle] .ke-form-header{
+  background: color-mix(in srgb, var(--fs-text) 5%, var(--fs-surface)) !important;
+  border-color: var(--fs-line) !important;
+}
+/* override the exact slate utilities the form markup uses, scoped to themed forms */
+[data-formstyle] .text-slate-900,
+[data-formstyle] .text-slate-800,
+[data-formstyle] .text-slate-700{ color: var(--fs-text) !important; }
+[data-formstyle] .text-slate-600,
+[data-formstyle] .text-slate-500,
+[data-formstyle] .text-slate-400{ color: var(--fs-muted) !important; }
+[data-formstyle] .bg-slate-50,
+[data-formstyle] .bg-slate-100{ background: color-mix(in srgb, var(--fs-text) 5%, var(--fs-surface)) !important; }
+[data-formstyle] .border-slate-100,
+[data-formstyle] .border-slate-200,
+[data-formstyle] .border-slate-300{ border-color: var(--fs-line) !important; }
+
+/* form controls */
+[data-formstyle] input:not([type=checkbox]):not([type=radio]):not([type=range]),
+[data-formstyle] select,
+[data-formstyle] textarea{
+  background: var(--fs-input-bg) !important;
+  color: var(--fs-text) !important;
+  border: 1px solid var(--fs-line) !important;
+  border-radius: var(--fs-radius) !important;
+  transition: border-color .15s, box-shadow .15s;
+}
+[data-formstyle] input:focus,
+[data-formstyle] select:focus,
+[data-formstyle] textarea:focus{
+  border-color: var(--fs-primary) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fs-primary) 22%, transparent) !important;
+  outline: none;
+}
+[data-formstyle] input::placeholder,
+[data-formstyle] textarea::placeholder{ color: var(--fs-muted) !important; opacity: 1; }
+[data-formstyle] input[type=checkbox],
+[data-formstyle] input[type=radio]{ accent-color: var(--fs-primary); }
+
+/* the submit button — kill the hardcoded navy gradient, use the theme primary */
+[data-formstyle] .ke-form-submit{
+  background: var(--fs-primary) !important;
+  background-image: none !important;
+  color: #fff !important;
+  border-radius: var(--fs-radius) !important;
+  box-shadow: none !important;
+}
+[data-formstyle] .ke-form-submit:hover{ filter: brightness(1.07); }
+
+/* accent-coloured bits the form uses for links / required marks / prices */
+[data-formstyle] .text-primary{ color: var(--fs-primary) !important; }
+[data-formstyle] .text-accent,[data-formstyle] .text-red-500{ color: var(--fs-accent) !important; }
+
+/* ===========================================================================
+   DESIGN LANGUAGES
+   =========================================================================== */
+
+/* 01 · MINIMAL — clean, soft, the refined baseline ------------------------- */
+[data-formstyle="minimal"]{ --fs-radius: 12px; }
+[data-formstyle="minimal"] .ke-form-card{ box-shadow: 0 20px 45px -24px color-mix(in srgb, var(--fs-text) 40%, transparent) !important; }
+
+/* 02 · CORPORATE — crisp, business, primary top-rule ---------------------- */
+[data-formstyle="corporate"]{ --fs-radius: 8px; font-family: 'Inter', system-ui, sans-serif; }
+[data-formstyle="corporate"] .ke-form-card{ border-top: 4px solid var(--fs-primary) !important; box-shadow: 0 16px 40px -28px rgba(0,0,0,.4) !important; }
+[data-formstyle="corporate"] .ke-form-submit{ font-weight: 600; letter-spacing: .01em; }
+
+/* 03 · ELEGANT — dark, serif, gold rules ---------------------------------- */
+[data-formstyle="elegant"]{ --fs-radius: 4px; font-family: 'Playfair Display', Georgia, serif; }
+[data-formstyle="elegant"] .ke-form-card{ box-shadow: 0 30px 70px -30px rgba(0,0,0,.7) !important; }
+[data-formstyle="elegant"] .ke-form-header{ text-align: center; }
+[data-formstyle="elegant"] label{ letter-spacing: .02em; }
+[data-formstyle="elegant"] .ke-form-submit{ letter-spacing: .08em; text-transform: uppercase; font-size: 13px; }
+
+/* 04 · GLASS — frosted translucent pane ----------------------------------- */
+[data-formstyle="glass"]{ --fs-radius: 18px; --fs-input-bg: color-mix(in srgb, var(--fs-surface) 22%, transparent); }
+[data-formstyle="glass"] .ke-form-card{
+  background: color-mix(in srgb, var(--fs-surface) 55%, transparent) !important;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border: 1px solid color-mix(in srgb, #fff 22%, transparent) !important;
+  box-shadow: 0 30px 80px -30px rgba(0,0,0,.5) !important;
+}
+[data-formstyle="glass"] .ke-form-header{ background: transparent !important; }
+[data-formstyle="glass"] .ke-form-submit{ box-shadow: 0 12px 30px -6px color-mix(in srgb, var(--fs-primary) 55%, transparent) !important; }
+
+/* 05 · BRUTALIST — hard borders + offset shadow, no radius ----------------- */
+[data-formstyle="brutalist"]{ --fs-radius: 0; --fs-line: var(--fs-text); font-family: 'Space Grotesk', sans-serif; }
+[data-formstyle="brutalist"] .ke-form-card{ border: 3px solid var(--fs-text) !important; box-shadow: 8px 8px 0 var(--fs-primary) !important; }
+[data-formstyle="brutalist"] .ke-form-header{ border-bottom: 3px solid var(--fs-text) !important; }
+[data-formstyle="brutalist"] label{ font-weight: 700; text-transform: uppercase; font-size: 11.5px; letter-spacing: .02em; }
+[data-formstyle="brutalist"] input:not([type=checkbox]):not([type=radio]):not([type=range]),
+[data-formstyle="brutalist"] select,
+[data-formstyle="brutalist"] textarea{ border: 2px solid var(--fs-text) !important; box-shadow: 3px 3px 0 color-mix(in srgb, var(--fs-text) 22%, transparent) !important; }
+[data-formstyle="brutalist"] .ke-form-submit{ border: 2px solid var(--fs-text) !important; box-shadow: 5px 5px 0 var(--fs-text) !important; font-weight: 700; }
+
+/* 06 · SWISS — underline-only inputs on rules ----------------------------- */
+[data-formstyle="swiss"]{ --fs-radius: 0; font-family: 'Inter', system-ui, sans-serif; }
+[data-formstyle="swiss"] label{ font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--fs-muted) !important; }
+[data-formstyle="swiss"] input:not([type=checkbox]):not([type=radio]):not([type=range]),
+[data-formstyle="swiss"] select,
+[data-formstyle="swiss"] textarea{ border: 0 !important; border-bottom: 1.5px solid var(--fs-line) !important; border-radius: 0 !important; background: transparent !important; padding-left: 2px !important; padding-right: 2px !important; }
+[data-formstyle="swiss"] input:focus,[data-formstyle="swiss"] select:focus,[data-formstyle="swiss"] textarea:focus{ box-shadow: none !important; border-bottom: 2px solid var(--fs-primary) !important; }
+[data-formstyle="swiss"] .ke-form-card{ box-shadow: none !important; border: 1px solid var(--fs-line) !important; }
+
+/* 07 · EDITORIAL — magazine serif display, ruled inputs ------------------- */
+[data-formstyle="editorial"]{ --fs-radius: 2px; font-family: 'Inter', sans-serif; }
+[data-formstyle="editorial"] .ke-form-header h1,[data-formstyle="editorial"] h2{ font-family: 'Playfair Display', Georgia, serif; font-weight: 400; }
+[data-formstyle="editorial"] input:not([type=checkbox]):not([type=radio]):not([type=range]),
+[data-formstyle="editorial"] select,
+[data-formstyle="editorial"] textarea{ border: 0 !important; border-bottom: 1px solid var(--fs-line) !important; border-radius: 0 !important; background: transparent !important; font-family: 'Playfair Display', Georgia, serif; font-size: 16px !important; }
+[data-formstyle="editorial"] input:focus,[data-formstyle="editorial"] textarea:focus,[data-formstyle="editorial"] select:focus{ box-shadow: none !important; border-bottom-color: var(--fs-primary) !important; }
+[data-formstyle="editorial"] .ke-form-card{ box-shadow: 0 22px 50px -30px rgba(0,0,0,.4) !important; }
+
+/* 08 · TERMINAL — monospace console, glow --------------------------------- */
+[data-formstyle="terminal"]{ --fs-radius: 0; font-family: 'JetBrains Mono', monospace; --fs-input-bg: color-mix(in srgb, var(--fs-text) 8%, var(--fs-surface)); }
+[data-formstyle="terminal"] .ke-form-card{ border: 1px solid var(--fs-primary) !important; box-shadow: 0 0 0 1px color-mix(in srgb,var(--fs-primary) 30%,transparent), 0 24px 60px -30px color-mix(in srgb,var(--fs-primary) 60%,transparent) !important; }
+[data-formstyle="terminal"] .ke-form-header{ background: transparent !important; border-bottom: 1px dashed var(--fs-line) !important; }
+[data-formstyle="terminal"] label{ font-size: 11.5px; letter-spacing: .04em; }
+[data-formstyle="terminal"] label::before{ content: '> '; color: var(--fs-primary); }
+[data-formstyle="terminal"] input:focus,[data-formstyle="terminal"] select:focus,[data-formstyle="terminal"] textarea:focus{ box-shadow: 0 0 14px color-mix(in srgb, var(--fs-primary) 40%, transparent) !important; }
+[data-formstyle="terminal"] .ke-form-submit{ background: transparent !important; border: 1px solid var(--fs-primary) !important; color: var(--fs-primary) !important; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
+[data-formstyle="terminal"] .ke-form-submit:hover{ background: var(--fs-primary) !important; color: #fff !important; }
+
+/* 09 · NEU — soft neumorphic, no borders ---------------------------------- */
+[data-formstyle="neu"]{ --fs-radius: 16px; font-family: 'Poppins', sans-serif; }
+[data-formstyle="neu"] .ke-form-card{ border: 0 !important; box-shadow: 18px 18px 40px color-mix(in srgb, var(--fs-text) 14%, transparent), -18px -18px 40px color-mix(in srgb, #fff 70%, transparent) !important; }
+[data-formstyle="neu"] .ke-form-header{ background: transparent !important; border: 0 !important; }
+[data-formstyle="neu"] input:not([type=checkbox]):not([type=radio]):not([type=range]),
+[data-formstyle="neu"] select,
+[data-formstyle="neu"] textarea{ border: 0 !important; background: var(--fs-surface) !important; box-shadow: inset 5px 5px 11px color-mix(in srgb, var(--fs-text) 12%, transparent), inset -5px -5px 11px color-mix(in srgb, #fff 60%, transparent) !important; }
+[data-formstyle="neu"] input:focus,[data-formstyle="neu"] select:focus,[data-formstyle="neu"] textarea:focus{ box-shadow: inset 5px 5px 11px color-mix(in srgb, var(--fs-primary) 22%, transparent), inset -5px -5px 11px color-mix(in srgb, #fff 60%, transparent) !important; }
+[data-formstyle="neu"] .ke-form-submit{ box-shadow: 7px 7px 16px color-mix(in srgb, var(--fs-primary) 40%, transparent) !important; }
+
+/* 10 · CLAY — puffy pastel, big radius, pressable ------------------------- */
+[data-formstyle="clay"]{ --fs-radius: 22px; font-family: 'Poppins', sans-serif; }
+[data-formstyle="clay"] .ke-form-card{ border: 0 !important; box-shadow: 0 26px 60px -28px color-mix(in srgb, var(--fs-primary) 40%, transparent) !important; }
+[data-formstyle="clay"] .ke-form-header{ background: transparent !important; border: 0 !important; }
+[data-formstyle="clay"] input:not([type=checkbox]):not([type=radio]):not([type=range]),
+[data-formstyle="clay"] select,
+[data-formstyle="clay"] textarea{ border: 0 !important; background: color-mix(in srgb, var(--fs-text) 4%, var(--fs-surface)) !important; box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--fs-text) 12%, transparent) !important; }
+[data-formstyle="clay"] input:focus,[data-formstyle="clay"] select:focus,[data-formstyle="clay"] textarea:focus{ box-shadow: inset 0 -3px 0 var(--fs-primary) !important; }
+[data-formstyle="clay"] .ke-form-submit{ box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--fs-primary) 60%, #000), 0 12px 24px -8px color-mix(in srgb, var(--fs-primary) 50%, transparent) !important; }
+
+/* 11 · FESTIVE — bold, colourful, playful --------------------------------- */
+[data-formstyle="festive"]{ --fs-radius: 14px; font-family: 'Outfit', sans-serif; }
+[data-formstyle="festive"] .ke-form-card{ border: 2px solid var(--fs-primary) !important; box-shadow: 10px 10px 0 -2px color-mix(in srgb, var(--fs-accent) 55%, transparent) !important; }
+[data-formstyle="festive"] .ke-form-header{ background: color-mix(in srgb, var(--fs-primary) 10%, var(--fs-surface)) !important; }
+[data-formstyle="festive"] label{ font-weight: 600; }
+[data-formstyle="festive"] .ke-form-submit{ font-weight: 700; background: linear-gradient(90deg, var(--fs-primary), var(--fs-accent)) !important; }
+
+/* 12 · BOTANICAL — organic, rounded, serif headings ----------------------- */
+[data-formstyle="botanical"]{ --fs-radius: 20px; font-family: 'Inter', sans-serif; }
+[data-formstyle="botanical"] .ke-form-header h1,[data-formstyle="botanical"] h2{ font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; }
+[data-formstyle="botanical"] .ke-form-card{ box-shadow: 0 18px 44px -26px color-mix(in srgb, var(--fs-primary) 40%, transparent) !important; }
+[data-formstyle="botanical"] input:not([type=checkbox]):not([type=radio]):not([type=range]),
+[data-formstyle="botanical"] select,
+[data-formstyle="botanical"] textarea{ border-radius: 16px !important; }
+[data-formstyle="botanical"] .ke-form-submit{ border-radius: 999px !important; }
+
+/* ===========================================================================
+   PAGE LAYOUTS
+   =========================================================================== */
+
+/* FULL — edge-to-edge slab: widen the column, strip card chrome, band header */
+[data-formlayout="full"] .max-w-3xl{ max-width: 64rem !important; padding-left: 0 !important; padding-right: 0 !important; }
+[data-formlayout="full"] .ke-form-card{ border-radius: 0 !important; border-left: 0 !important; border-right: 0 !important; }
+[data-formstyle][data-formlayout="full"] .ke-form-header{ background: var(--fs-primary) !important; color: #fff !important; }
+[data-formstyle][data-formlayout="full"] .ke-form-header *{ color: #fff !important; }
+
+/* ===========================================================================
+   FIELD STRUCTURES — how each field's LABEL + CONTROL are placed on the form.
+   Targets [data-ftype] wrappers (set in renderField). `stack` is today's default
+   (top labels). section_header / price / terms_checkbox opt out of repositioning.
+   =========================================================================== */
+
+/* LEFT — label to the LEFT of the control (spec-sheet / dashboard rows) -------- */
+[data-formfields="left"] form [data-ftype]:not([data-ftype="section_header"]):not([data-ftype="price"]):not([data-ftype="terms_checkbox"]){
+  grid-column: 1 / -1; display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 4px 22px; align-items: start;
+}
+[data-formfields="left"] form [data-ftype]:not([data-ftype="section_header"]):not([data-ftype="price"]):not([data-ftype="terms_checkbox"]) > label:first-child{
+  grid-column: 1; margin: 0; padding-top: 12px;
+}
+[data-formfields="left"] form [data-ftype]:not([data-ftype="section_header"]):not([data-ftype="price"]):not([data-ftype="terms_checkbox"]) > :not(label){
+  grid-column: 2; min-width: 0;
+}
+@media (max-width: 640px){
+  [data-formfields="left"] form [data-ftype]{ display: block !important; }
+  [data-formfields="left"] form [data-ftype] > label:first-child{ padding-top: 0; }
+}
+
+/* FLOAT — the label sits on the control's top edge (a chip on the border) ------ */
+[data-formfields="float"] form [data-ftype="text"],[data-formfields="float"] form [data-ftype="email"],
+[data-formfields="float"] form [data-ftype="phone"],[data-formfields="float"] form [data-ftype="number"],
+[data-formfields="float"] form [data-ftype="date"],[data-formfields="float"] form [data-ftype="time"],
+[data-formfields="float"] form [data-ftype="dropdown"],[data-formfields="float"] form [data-ftype="textarea"],
+[data-formfields="float"] form [data-ftype="currency"],[data-formfields="float"] form [data-ftype="custom_amount"],
+[data-formfields="float"] form [data-ftype="rating"]{ position: relative; padding-top: 9px; }
+[data-formfields="float"] form [data-ftype="text"] > label:first-child,[data-formfields="float"] form [data-ftype="email"] > label:first-child,
+[data-formfields="float"] form [data-ftype="phone"] > label:first-child,[data-formfields="float"] form [data-ftype="number"] > label:first-child,
+[data-formfields="float"] form [data-ftype="date"] > label:first-child,[data-formfields="float"] form [data-ftype="time"] > label:first-child,
+[data-formfields="float"] form [data-ftype="dropdown"] > label:first-child,[data-formfields="float"] form [data-ftype="textarea"] > label:first-child,
+[data-formfields="float"] form [data-ftype="currency"] > label:first-child,[data-formfields="float"] form [data-ftype="custom_amount"] > label:first-child,
+[data-formfields="float"] form [data-ftype="rating"] > label:first-child{
+  position: absolute; top: 0; left: 11px; z-index: 2; margin: 0;
+  padding: 0 6px; font-size: 11px; line-height: 1;
+  background: var(--fs-surface); color: var(--fs-muted);
+}
+
+/* RULE — the label gets a hairline rule running to the field's right edge ------ */
+[data-formfields="rule"] form [data-ftype]:not([data-ftype="section_header"]):not([data-ftype="price"]):not([data-ftype="terms_checkbox"]) > label:first-child{
+  display: flex; align-items: center; gap: 12px;
+}
+[data-formfields="rule"] form [data-ftype]:not([data-ftype="section_header"]):not([data-ftype="price"]):not([data-ftype="terms_checkbox"]) > label:first-child::after{
+  content: ''; flex: 1; height: 1px; background: var(--fs-line);
+}
+
+/* NUMBERED — single column, each field auto-numbered on the left --------------- */
+[data-formfields="numbered"] form{ counter-reset: fs-fld; }
+[data-formfields="numbered"] form > [data-ftype]{ grid-column: 1 / -1 !important; position: relative; padding-left: 34px; }
+[data-formfields="numbered"] form > [data-ftype]:not([data-ftype="section_header"])::before{
+  counter-increment: fs-fld; content: counter(fs-fld, decimal-leading-zero);
+  position: absolute; left: 0; top: 3px; font-size: 11px; color: var(--fs-primary); font-variant-numeric: tabular-nums;
+}
+[data-formfields="numbered"] form > [data-ftype="section_header"]{ padding-left: 0; }
+
+/* BOXED — every field sits in its own bordered card --------------------------- */
+[data-formfields="boxed"] form [data-ftype]:not([data-ftype="section_header"]){
+  border: 1px solid var(--fs-line); border-radius: var(--fs-radius);
+  padding: 14px 16px; background: color-mix(in srgb, var(--fs-text) 3%, var(--fs-surface));
+}
+
+/* SPLIT — two columns: a hero/summary aside + the form card */
+[data-formlayout="split"] .max-w-3xl{ max-width: 68rem !important; display: grid; grid-template-columns: 0.82fr 1fr; gap: 0; align-items: start; }
+.ke-form-aside{ position: sticky; top: 0; align-self: stretch; min-height: 100%; padding: 40px 34px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px;
+  color: #fff; background: linear-gradient(160deg, var(--fs-primary), color-mix(in srgb, var(--fs-accent) 65%, var(--fs-primary))); border-radius: var(--fs-radius) 0 0 var(--fs-radius); }
+[data-formlayout="split"] .ke-form-card{ border-radius: 0 var(--fs-radius) var(--fs-radius) 0 !important; }
+.ke-form-aside .fa-kicker{ font-size: 11px; letter-spacing: .18em; text-transform: uppercase; opacity: .8; }
+.ke-form-aside h2{ font-size: clamp(24px, 3vw, 38px); line-height: 1.08; font-weight: 700; margin-top: 10px; }
+.ke-form-aside .fa-meta{ display: flex; flex-direction: column; gap: 8px; font-size: 13px; opacity: .92; }
+.ke-form-aside .fa-meta span{ display: block; opacity: .7; font-size: 11px; }
+@media (max-width: 820px){
+  [data-formlayout="split"] .max-w-3xl{ grid-template-columns: 1fr; }
+  .ke-form-aside{ position: static; border-radius: var(--fs-radius) var(--fs-radius) 0 0; }
+  [data-formlayout="split"] .ke-form-card{ border-radius: 0 0 var(--fs-radius) var(--fs-radius) !important; }
+}
