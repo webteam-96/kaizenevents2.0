@@ -9,7 +9,7 @@ import { Plus, Search, Filter, Download, ArrowRight, Users, AlertTriangle, Refre
 import { toast } from 'sonner';
 import { exportRegistrationsXlsx } from '../utils/exportRegistrations';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
 // Server-relative upload URLs (/api/uploads/...) must be prefixed with the API origin,
 // otherwise the browser hits the frontend host and nginx strips the wrong /api segment.
 const toAbsUrl = (url) => url?.startsWith('/api/uploads/') ? `${API_BASE_URL}${url}` : (url || '');

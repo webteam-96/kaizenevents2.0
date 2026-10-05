@@ -7,7 +7,7 @@ import { Loader2, CheckCircle, AlertCircle, CreditCard, ArrowLeft } from 'lucide
 import { toast } from 'sonner';
 import PaymentCheckout from '../components/PaymentCheckout';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 /**
  * Public page for completing a pending payment via a token-protected link.

@@ -12,7 +12,7 @@ import { richTextToPlain } from '../components/ui/RichTextInput';
 import { parseServerDate, serverDateMs } from './serverTime';
 import { humanizeOptionValue } from './optionLabels';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
 // Upload URLs are stored server-relative (/api/uploads/...) — prefix with the API
 // origin so the exported cell is a working link, not a dead relative path.
 const toAbsUrl = (url) => (typeof url === 'string' && url.startsWith('/api/') ? `${API_BASE_URL}${url}` : (url || ''));

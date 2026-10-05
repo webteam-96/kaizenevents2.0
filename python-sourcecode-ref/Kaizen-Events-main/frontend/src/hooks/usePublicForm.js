@@ -8,7 +8,7 @@ import {
 } from '../utils/fieldValidation';
 import { applyCouponToTotal } from '../utils/couponPricing';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 // custom_amount contribution to the total: empty/non-numeric input counts as 0,
 // otherwise the typed value as-is. NOT clamped to min_value/max_value — bounds are

@@ -28,7 +28,7 @@ import { parseServerDate, formatServerDate } from '../utils/serverTime';
 import KaizenBrandFooter from '../components/KaizenBrandFooter';
 import { hexToRgba } from '../utils/colorUtils';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
 // Convert server-relative upload URLs to absolute (otherwise <img> resolves them against the frontend origin)
 const toAbsUrl = (url) => url?.startsWith('/api/uploads/') ? `${API_BASE_URL}${url}` : (url || '');
 

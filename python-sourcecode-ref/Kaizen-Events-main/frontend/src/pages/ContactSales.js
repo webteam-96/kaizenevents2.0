@@ -11,7 +11,7 @@ import PhoneInput, { validatePhone } from '../components/ui/PhoneInput';
 import Footer from '../components/Footer';
 import useMathCaptcha from '../hooks/useMathCaptcha';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 const ContactSales = () => {
   useEffect(() => { window.scrollTo(0, 0); }, []);

@@ -26,7 +26,7 @@ import { resolveRegistrantContact } from '../utils/registrantContact';
 import { validateFieldValue, gatewayAmountFieldError } from '../utils/fieldValidation';
 import { applyCouponToTotal, describeCoupon } from '../utils/couponPricing';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
 const toAbsUrl = (url) => url?.startsWith('/api/uploads/') ? `${API_BASE_URL}${url}` : (url || '');
 
 // custom_amount contribution to the total: empty/non-numeric input counts as 0,

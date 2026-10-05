@@ -20,7 +20,7 @@ import { humanizeOptionValue } from '../utils/optionLabels';
 import { applyFileHyperlinks } from '../utils/exportRegistrations';
 import { resolveRegistrantContact } from '../utils/registrantContact';
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
 // Upload URLs are stored server-relative (/api/uploads/...) — prefix with the API
 // origin so links work from the admin UI and exported sheets.
 const toAbsUrl = (url) => (typeof url === 'string' && url.startsWith('/api/') ? `${API_BASE_URL}${url}` : (url || ''));
